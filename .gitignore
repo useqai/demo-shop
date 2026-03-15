@@ -26,3 +26,7 @@ sl-test-listener.jar
 # OS / IDE
 .DS_Store
 .vscode/settings.json
+
+# Old Next.js build output
+frontend/.next/
+frontend/dist_original/
