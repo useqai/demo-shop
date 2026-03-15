@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="playwright" tests="5" failures="2" errors="0" time="12.345">
+  <testsuite name="tests/login.spec.ts" tests="3" failures="1" time="6.1">
+    <testcase name="should login with valid credentials" classname="tests/login.spec.ts" time="1.2"/>
+    <testcase name="should show error on invalid password" classname="tests/login.spec.ts" time="1.5">
+      <failure message="Error: Timed out 5000ms waiting for expect(locator).toBeVisible()" type="Error">
+        Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+        at tests/login.spec.ts:42:5
+      </failure>
+    </testcase>
+    <testcase name="should redirect after login" classname="tests/login.spec.ts" time="3.4"/>
+  </testsuite>
+  <testsuite name="tests/dashboard.spec.ts" tests="2" failures="1" time="6.2">
+    <testcase name="should load dashboard" classname="tests/dashboard.spec.ts" time="2.1"/>
+    <testcase name="should display recent runs" classname="tests/dashboard.spec.ts" time="4.1">
+      <failure message="Error: locator.click: Element not found" type="Error">
+        Error: locator.click: Element not found
+        at tests/dashboard.spec.ts:88:12
+      </failure>
+    </testcase>
+  </testsuite>
+</testsuites>
