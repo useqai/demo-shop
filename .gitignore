@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+frontend/dist/
+checkout-svc/target/
+
+# Logs and runtime files
+logs/
+*.log
+pids
+
+# Environment / secrets
+.env
+**/application.properties
+
+# Sealights CI files
+buildSessionId
+buildSessionId.txt
+sltoken.txt
+sealights-java-latest.zip
+sealights-java-version.txt
+sl-build-scanner.jar
+sl-test-listener.jar
+
+# OS / IDE
+.DS_Store
+.vscode/settings.json

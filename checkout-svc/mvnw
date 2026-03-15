@@ -1,0 +1,197 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# Apache Maven Wrapper startup batch script, version 3.2.0
+#
+# Optional ENV vars:
+# ------------------
+#   JAVA_HOME - location of a JDK home dir, required when type is not auto
+#   MVNW_REPOURL - repo url base for downloading Maven distribution
+#   MVNW_USERNAME/MVNW_PASSWORD - user and password for downloading Maven
+#   MVNW_VERBOSE - true: enable verbose log; false: disable verbose log; 0-9 number: set log level
+# ----------------------------------------------------------------------------
+
+set -euf
+[ "${MVNW_VERBOSE-}" != debug ] || set -x
+
+# OS specific support.
+native_path() { printf %s\\n "$1"; }
+case "$(uname)" in
+CYGWIN* | MINGW*)
+  [ -z "${JAVA_HOME-}" ] || JAVA_HOME="$(cygpath --unix "$JAVA_HOME")"
+  native_path() { cygpath --path --windows "$1"; }
+  ;;
+esac
+
+# set JAVACMD and JAVACCMD
+set_java_home() {
+  # For Cygwin and MinGW, ensure paths are in Unix format before anything is touched
+  if [ -n "${JAVA_HOME-}" ]; then
+    if [ -x "$JAVA_HOME/jre/sh/java" ]; then
+      # IBM's JDK on AIX uses strange locations for the executables
+      JAVACMD="$JAVA_HOME/jre/sh/java"
+      JAVACCMD="$JAVA_HOME/jre/sh/javac"
+    else
+      JAVACMD="$JAVA_HOME/bin/java"
+      JAVACCMD="$JAVA_HOME/bin/javac"
+
+      if [ ! -x "$JAVACMD" ] || [ ! -x "$JAVACCMD" ]; then
+        echo "The JAVA_HOME environment variable is not defined correctly, so mvnw cannot run." >&2
+        echo "JAVA_HOME is set to \"$JAVA_HOME\", but \"\$JAVA_HOME/bin/java\" or \"\$JAVA_HOME/bin/javac\" does not exist." >&2
+        return 1
+      fi
+    fi
+  else
+    JAVACMD="$(
+      'set' +e
+      'unset' JAVA_HOME
+      nohup sh -c 'java -version' > /dev/null 2>&1
+      command -v java
+    )" || :
+
+    JAVACCMD="$(
+      'set' +e
+      'unset' JAVA_HOME
+      nohup sh -c 'javac -version' > /dev/null 2>&1
+      command -v javac
+    )" || :
+
+    if [ ! -x "${JAVACMD-}" ] || [ ! -x "${JAVACCMD-}" ]; then
+      echo "The java/javac command does not exist in PATH nor is JAVA_HOME set, so mvnw cannot run." >&2
+      return 1
+    fi
+  fi
+}
+
+# hash of the wrapper jar
+wrapperHash() {
+  if command -v sha256sum >/dev/null 2>&1; then
+    sha256sum "$1" | cut -d " " -f 1
+  elif command -v shasum >/dev/null 2>&1; then
+    shasum -a 256 "$1" | cut -d " " -f 1
+  else
+    echo "No sha256 utility found, skipping hash check." >&2
+    echo "SKIP"
+  fi
+}
+
+# download a file from a URL and save to the given path
+download() {
+  url="$1"
+  path="$2"
+
+  if [ -x "$(command -v curl)" ]; then
+    curl -fsSL --fail-early --create-dirs -o "$path" "$url" || return 1
+  elif [ -x "$(command -v wget)" ]; then
+    wget -q -O "$path" "$url" || return 1
+  else
+    echo "Falling back to using Java to download" >&2
+    javaDownload "$url" "$path"
+  fi
+}
+
+javaDownload() {
+  javaSource="$1"
+  javaTarget="$2"
+  "${JAVACMD}" -classpath "" \
+    -Dmaven.wrapperJar="$javaTarget" \
+    "-Dmaven.wrapperUrl=$javaSource" \
+    org.apache.maven.wrapper.MavenWrapperDownloader "$javaTarget" || :
+}
+
+# find the .mvn/wrapper dir
+findWrapperDir() {
+  # start from the script dir, walk up
+  dir="$(cd -P "$(dirname "$0")" && pwd)"
+  wdir="$dir"
+  while :; do
+    if [ -f "$wdir/.mvn/wrapper/maven-wrapper.properties" ]; then
+      wrapperDir="$wdir/.mvn/wrapper"
+      return
+    fi
+    parent="$(dirname "$wdir")"
+    [ "$parent" != "$wdir" ] || break
+    wdir="$parent"
+  done
+  wrapperDir="$(cd -P "$(dirname "$0")/.mvn/wrapper" 2>/dev/null && pwd)" || wrapperDir=""
+}
+
+# main
+findWrapperDir
+wrapperProperties="$wrapperDir/maven-wrapper.properties"
+
+if [ -f "$wrapperProperties" ]; then
+  distributionUrl="$(sed -n 's/^distributionUrl=//p' "$wrapperProperties")"
+  distributionSha256Sum="$(sed -n 's/^distributionSha256Sum=//p' "$wrapperProperties")"
+  wrapperUrl="$(sed -n 's/^wrapperUrl=//p' "$wrapperProperties")"
+else
+  echo "No maven-wrapper.properties found." >&2
+  exit 1
+fi
+
+# use MVNW_REPOURL to override the download host
+[ -z "${MVNW_REPOURL-}" ] || {
+  distributionUrl="${MVNW_REPOURL}/$(echo "$distributionUrl" | sed 's|.*org/apache/maven|org/apache/maven|')"
+  wrapperUrl="${MVNW_REPOURL}/$(echo "$wrapperUrl" | sed 's|.*org/apache/maven|org/apache/maven|')"
+}
+
+# compute the local distribution dir
+distributionName="$(basename "$distributionUrl")"
+distributionDirName="${distributionName%.zip}"
+userHome="${HOME:-$(cd ~ && pwd)}"
+m2Home="${M2_HOME:-}"
+[ -n "$m2Home" ] || m2Home="${userHome}/.m2"
+wrapperDists="${m2Home}/wrapper/dists"
+distributionDir="${wrapperDists}/${distributionDirName}"
+# The zip (e.g. apache-maven-3.9.6-bin.zip) extracts to apache-maven-3.9.6/ (no -bin suffix)
+mavenHome="$distributionDir/${distributionDirName%-bin}"
+
+# download & unzip if not present
+if [ ! -d "$mavenHome" ] || [ ! -x "$mavenHome/bin/mvn" ]; then
+  set_java_home || exit 1
+
+  mkdir -p "$distributionDir"
+  zipFile="${distributionDir}/${distributionName}"
+
+  echo "Downloading ${distributionUrl}"
+  download "$distributionUrl" "$zipFile" || {
+    echo "Could not download $distributionUrl" >&2
+    exit 1
+  }
+
+  # verify hash if provided
+  if [ -n "${distributionSha256Sum-}" ]; then
+    actual="$(wrapperHash "$zipFile")"
+    if [ "$actual" != "SKIP" ] && [ "$actual" != "$distributionSha256Sum" ]; then
+      echo "Hash check failed for $zipFile" >&2
+      echo "  Expected: $distributionSha256Sum" >&2
+      echo "  Actual:   $actual" >&2
+      exit 1
+    fi
+  fi
+
+  unzip -q -o "$zipFile" -d "$distributionDir"
+  rm -f "$zipFile"
+fi
+
+# run mvn
+set_java_home || exit 1
+exec "$mavenHome/bin/mvn" "$@"

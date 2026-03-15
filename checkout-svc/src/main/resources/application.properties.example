@@ -1,0 +1,10 @@
+# Supabase REST API
+supabase.url=https://your-project.supabase.co
+supabase.key=your-supabase-anon-key
+
+# Downstream service URLs
+cart.service.url=http://localhost:3002
+payment.service.url=http://localhost:3003
+
+# Server
+server.port=8080
