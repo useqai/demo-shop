@@ -1,0 +1,19 @@
+name: QAI Test Intelligence
+
+on:
+  pull_request:
+
+jobs:
+  qai:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: QAI Test Intelligence
+        uses: useqai/qai-agent@main
+        if: always()
+        with:
+          junit-path: 'test-results/results.xml'
+          trace-path: 'test-results/**/*.zip'
