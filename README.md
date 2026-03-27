@@ -1,95 +1,101 @@
-# DemoShop — Local Microservices Demo
+# DemoShop — Microservices Demo
 
-A simplified e-commerce microservices demo inspired by [GCP Online Boutique](https://github.com/GoogleCloudPlatform/microservices-demo). Runs entirely locally without Docker. Uses Next.js, Node.js/Express, and Java/Spring Boot with Supabase (PostgreSQL) as the database.
+A simplified e-commerce microservices demo inspired by [GCP Online Boutique](https://github.com/GoogleCloudPlatform/microservices-demo).
+
+**Live demo:** https://demoshop-frontend.onrender.com
+> Built with Vite + React, Node.js/Express, and Java/Spring Boot. Backed by Supabase (PostgreSQL). Deployed on Render.
+
+**Demo credentials:** `demo / demo123` · `admin / admin456`
+
+---
 
 ## Architecture
 
 ```
 Browser
-  └─→ frontend          (Next.js, port 3000)
-        ├─→ product-catalog-svc  (Node/Express, port 3001)
-        ├─→ cart-svc             (Node/Express, port 3002)
-        └─→ checkout-svc         (Java/Spring Boot, port 8080)
-                ├─→ cart-svc     (GET cart, DELETE cart)
-                └─→ payment-svc  (Node/Express, port 3003)
+  └─→ demoshop-frontend          (Vite + React SPA + Express proxy)
+        ├─→ demoshop-catalog      (Node/Express — product listings)
+        ├─→ demoshop-cart         (Node/Express — shopping cart)
+        └─→ demoshop-checkout     (Java/Spring Boot — orders & auth)
+                ├─→ demoshop-cart     (fetch cart items)
+                └─→ demoshop-payment  (Node/Express — mock payments)
 ```
 
 ## Services
 
-| Service | Tech | Port | Responsibility |
-|---|---|---|---|
-| `frontend` | Next.js | 3000 | E-commerce UI |
-| `product-catalog-svc` | Node.js/Express | 3001 | Product listings & search |
-| `cart-svc` | Node.js/Express | 3002 | Shopping cart |
-| `checkout-svc` | Java/Spring Boot | 8080 | Order orchestration |
-| `payment-svc` | Node.js/Express | 3003 | Mock payment processing |
+| Service | Tech | Responsibility |
+|---|---|---|
+| `frontend` | Vite + React + Express | SPA + API proxy |
+| `product-catalog-svc` | Node.js/Express | Product listings & search |
+| `cart-svc` | Node.js/Express | Shopping cart (Supabase) |
+| `checkout-svc` | Java 17 / Spring Boot | Order orchestration & auth |
+| `payment-svc` | Node.js/Express | Mock payment processing |
 
-## Prerequisites
+---
+
+## Local Development
+
+### Prerequisites
 
 - Node.js 18+
-- Java 17+ (no Maven install needed — `./mvnw` downloads it automatically)
+- Java 17+
+- Maven (`brew install maven`)
 - A [Supabase](https://supabase.com) project (free tier works)
 
-## Setup
+### 1. Database setup
 
-### 1. Supabase
+1. Create a project at [supabase.com](https://supabase.com)
+2. In **SQL Editor**, run `db/schema.sql` then `db/seed.sql`
+3. Copy your project URL and anon key from **Settings → API**
 
-1. Create a new project at [supabase.com](https://supabase.com)
-2. Go to **SQL Editor** and run `db/schema.sql`
-3. Then run `db/seed.sql` to populate sample products
-4. Note your project URL and keys from **Settings → API**
+### 2. Environment variables
 
-### 2. Environment Variables
+Copy `.env.example` → `.env` in each Node.js service and the frontend directory. Fill in your Supabase URL and anon key.
 
-Copy `.env.example` to `.env` in each service directory and fill in your Supabase credentials.
+For `checkout-svc`, copy `src/main/resources/application.properties.example` → `application.properties`.
 
-For `checkout-svc`, also copy `src/main/resources/application.properties.example` to `application.properties`.
-
-### 3. Run All Services
+### 3. Start everything
 
 ```bash
-./start.sh        # starts all 5 services in the background
-./stop.sh         # stops them all
-```
-
-Logs go to `logs/<service>.log`. The checkout service takes ~60s on first run (Maven download + compile).
-
-```bash
-tail -f logs/checkout-svc.log   # watch checkout-svc startup
-tail -f logs/frontend.log       # watch frontend startup
-```
-
-Or run each service manually in separate terminals:
-
-```bash
+# Each service in a separate terminal:
 cd product-catalog-svc && npm install && npm run dev   # :3001
 cd cart-svc            && npm install && npm run dev   # :3002
 cd payment-svc         && npm install && npm run dev   # :3003
-cd checkout-svc        && ./mvnw spring-boot:run       # :8080
-cd frontend            && npm install && npm run dev   # :3000
+cd checkout-svc        && mvn spring-boot:run          # :8080
+cd frontend            && npm install && npm run dev   # :3000 (Vite) + :4000 (Express)
 ```
 
 Visit [http://localhost:3000](http://localhost:3000)
 
-## Building for Production
+---
 
-**Node.js services** — no build step; `node index.js` runs them directly.
+## Deployment (Render)
 
-**Frontend:**
-```bash
-cd frontend && npm run build && npm start
-```
+The repo includes a `render.yaml` Blueprint that defines all 5 services. To deploy your own instance:
 
-**Checkout service** — build a self-contained JAR:
-```bash
-cd checkout-svc && ./mvnw package -DskipTests
-java -jar target/checkout-svc-1.0.0.jar
-```
+1. Fork this repo
+2. Sign up at [render.com](https://render.com) → **New → Blueprint** → connect your fork
+3. In the Render dashboard, set these environment variables for each service:
+
+   | Service | Variable | Value |
+   |---|---|---|
+   | catalog, cart, payment | `SUPABASE_URL` | your Supabase project URL |
+   | catalog, cart, payment | `SUPABASE_ANON_KEY` | your Supabase anon key |
+   | checkout | `SUPABASE_URL` | your Supabase project URL |
+   | checkout | `SUPABASE_KEY` | your Supabase anon key |
+
+4. Trigger a deploy — all 5 services go live automatically
+
+> **Note:** Free tier services sleep after 15 min of inactivity (50s cold start). Use [UptimeRobot](https://uptimerobot.com) to ping each `/health` endpoint every 5 minutes to keep them warm.
+
+---
 
 ## User Flow
 
 1. Browse products on the home page
-2. Click a product to see details → Add to cart
+2. Click a product → Add to Cart
 3. View cart → adjust quantities
-4. Checkout → enter email + shipping address → Place order
-5. See order confirmation with transaction ID
+4. Sign in (or use guest checkout)
+5. Enter email + shipping address → Place Order
+6. See order confirmation with transaction ID
+7. View past orders under **My Orders**
