@@ -8,6 +8,7 @@ export default defineConfig({
     ['list'],
     ['junit', { outputFile: 'test-results/results.xml' }],
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
+    ['json', { outputFile: 'test-results/report.json' }],
   ],
   use: {
     baseURL: 'https://demoshop-frontend.onrender.com',

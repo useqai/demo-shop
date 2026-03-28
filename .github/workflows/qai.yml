@@ -74,6 +74,7 @@ jobs:
         with:
           junit-path: 'e2e/test-results/results.xml'
           trace-path: 'e2e/test-results/**/*.zip'
+          playwright-report: 'e2e/test-results/report.json'
           fail-on-high-risk: 'false'
           qai-url: https://ingest.useqai.dev
           qai-api-key: ${{ secrets.QAI_API_KEY }}
