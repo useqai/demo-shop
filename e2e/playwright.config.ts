@@ -12,6 +12,7 @@ export default defineConfig({
   use: {
     baseURL: 'https://demoshop-frontend.onrender.com',
     trace: 'on',
+    screenshot: 'only-on-failure',
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },

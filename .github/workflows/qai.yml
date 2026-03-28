@@ -44,6 +44,14 @@ jobs:
           path: e2e/test-results/results.xml
           retention-days: 30
 
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-screenshots
+          path: e2e/test-results/**/*.png
+          retention-days: 30
+
       - name: Upload Playwright traces
         if: always()
         uses: actions/upload-artifact@v4
