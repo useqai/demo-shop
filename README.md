@@ -2,8 +2,8 @@
 
 A simplified e-commerce microservices demo inspired by [GCP Online Boutique](https://github.com/GoogleCloudPlatform/microservices-demo).
 
-**Live demo:** https://demoshop-frontend.onrender.com
-> Built with Vite + React, Node.js/Express, and Java/Spring Boot. Backed by Supabase (PostgreSQL). Deployed on Render.
+**Live demo:** https://frontend-production-3988.up.railway.app
+> Built with Vite + React, Node.js/Express, and Java/Spring Boot. Backed by Supabase (PostgreSQL). Deployed on Railway.
 
 **Demo credentials:** `demo / demo123` · `admin / admin456`
 
@@ -71,24 +71,41 @@ Visit [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## Deployment (Render)
+## Deployment (Railway)
 
-The repo includes a `render.yaml` Blueprint that defines all 5 services. To deploy your own instance:
+The repo includes a `railway.toml` in each service directory. To deploy your own instance on [Railway](https://railway.app) (Hobby plan, $5/mo):
 
 1. Fork this repo
-2. Sign up at [render.com](https://render.com) → **New → Blueprint** → connect your fork
-3. In the Render dashboard, set these environment variables for each service:
+2. Sign up at [railway.app](https://railway.app) → **New Project → Deploy from GitHub repo** → select your fork → **Empty**
+3. Add 5 services via **+ Add → GitHub Repo**, setting the **Root Directory** for each:
+
+   | Service Name | Root Directory |
+   |---|---|
+   | `product-catalog-svc` | `product-catalog-svc` |
+   | `cart-svc` | `cart-svc` |
+   | `payment-svc` | `payment-svc` |
+   | `checkout-svc` | `checkout-svc` |
+   | `frontend` | `frontend` |
+
+4. Generate a public domain for each service: **Networking → Generate Domain**
+5. Set environment variables per service:
 
    | Service | Variable | Value |
    |---|---|---|
    | catalog, cart, payment | `SUPABASE_URL` | your Supabase project URL |
    | catalog, cart, payment | `SUPABASE_ANON_KEY` | your Supabase anon key |
+   | payment | `STRIPE_SECRET_KEY` | your Stripe secret key |
    | checkout | `SUPABASE_URL` | your Supabase project URL |
    | checkout | `SUPABASE_KEY` | your Supabase anon key |
+   | checkout | `CART_SERVICE_URL` | `https://${{cart-svc.RAILWAY_PUBLIC_DOMAIN}}` |
+   | checkout | `PAYMENT_SERVICE_URL` | `https://${{payment-svc.RAILWAY_PUBLIC_DOMAIN}}` |
+   | frontend | `PRODUCT_CATALOG_URL` | `${{product-catalog-svc.RAILWAY_PUBLIC_DOMAIN}}` |
+   | frontend | `CART_URL` | `${{cart-svc.RAILWAY_PUBLIC_DOMAIN}}` |
+   | frontend | `CHECKOUT_URL` | `${{checkout-svc.RAILWAY_PUBLIC_DOMAIN}}` |
 
-4. Trigger a deploy — all 5 services go live automatically
+6. Deploy in order: catalog/cart/payment → checkout → frontend
 
-> **Note:** Free tier services sleep after 15 min of inactivity (50s cold start). Use [UptimeRobot](https://uptimerobot.com) to ping each `/health` endpoint every 5 minutes to keep them warm.
+All 5 services redeploy automatically on every push to `main`.
 
 ---
 
