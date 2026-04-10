@@ -11,7 +11,7 @@ export default defineConfig({
     ['json', { outputFile: 'test-results/report.json' }],
   ],
   use: {
-    baseURL: 'https://demoshop-frontend.onrender.com',
+    baseURL: 'https://frontend-production-3988.up.railway.app',
     trace: 'on',
     screenshot: 'only-on-failure',
   },
