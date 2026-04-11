@@ -26,7 +26,7 @@ test.describe('Cart', () => {
     await addFirstProductToCart(page);
 
     await page.goto('/cart');
-    await expect(page.getByText(/\$\d+/)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/\$\d+/).first()).toBeVisible({ timeout: 15_000 });
     await expect(page.getByRole('button', { name: 'Proceed to Checkout' })).toBeVisible();
   });
 
@@ -43,7 +43,7 @@ test.describe('Cart', () => {
     await addFirstProductToCart(page);
 
     await page.goto('/cart');
-    await expect(page.getByText(/\$\d+/)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/\$\d+/).first()).toBeVisible({ timeout: 15_000 });
     // − button when qty=1 removes the item
     await page.getByRole('button', { name: '−' }).click();
     await expect(page.getByText('Your cart is empty.')).toBeVisible({ timeout: 10_000 });
@@ -53,7 +53,7 @@ test.describe('Cart', () => {
     await addFirstProductToCart(page);
 
     await page.goto('/cart');
-    await expect(page.getByText(/\$\d+/)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/\$\d+/).first()).toBeVisible({ timeout: 15_000 });
     await page.getByRole('button', { name: '×' }).click();
     await expect(page.getByText('Your cart is empty.')).toBeVisible({ timeout: 10_000 });
   });
@@ -62,7 +62,7 @@ test.describe('Cart', () => {
     await addFirstProductToCart(page);
 
     await page.goto('/cart');
-    await expect(page.getByText(/\$\d+/)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/\$\d+/).first()).toBeVisible({ timeout: 15_000 });
 
     const subtotalBefore = await page.locator('text=/Subtotal/i').locator('..').getByText(/\$\d+\.\d{2}/).textContent();
     await page.getByRole('button', { name: '+' }).click();
@@ -104,7 +104,7 @@ test.describe('Cart', () => {
     await expect(page.locator('a[href^="/products/"]').first()).toBeVisible({ timeout: 30_000 });
 
     await page.goto('/cart');
-    await expect(page.getByText(/\$\d+/)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/\$\d+/).first()).toBeVisible({ timeout: 15_000 });
     await expect(page.getByRole('button', { name: 'Proceed to Checkout' })).toBeVisible();
   });
 });

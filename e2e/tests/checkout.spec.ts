@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 
 async function login(page: any) {
   await page.goto('/login');
-  await page.getByPlaceholder(/username/i).fill('demo');
-  await page.getByPlaceholder(/password/i).fill('demo123');
+  await page.getByLabel('Username').fill('demo');
+  await page.getByLabel('Password').fill('demo123');
   await page.getByRole('button', { name: 'Sign In' }).click();
   await expect(page.getByText(/Hi, demo/i)).toBeVisible({ timeout: 30_000 });
 }

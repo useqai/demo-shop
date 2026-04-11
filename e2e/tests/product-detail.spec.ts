@@ -24,7 +24,7 @@ test.describe('Product Detail', () => {
   });
 
   test('Back button returns to homepage', async ({ page }) => {
-    await page.getByRole('link', { name: /back/i }).click();
+    await page.getByRole('button', { name: /back/i }).click();
     await expect(page).toHaveURL('/');
   });
 });
