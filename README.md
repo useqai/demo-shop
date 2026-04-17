@@ -14,7 +14,7 @@ A sample e-commerce app for trying out [QAI Platform](https://useqai.dev) — AI
 
 That's it. The CI will run Playwright E2E tests and QAI will analyze the results — AI root cause analysis, failure clusters, and fix suggestions will appear in your dashboard and PR comment.
 
-## What you'll see
+## What you'll see on your dashboard at useqai.dev
 
 - **AI Root Cause Analysis** — why each test failed and how to fix it
 - **Trace Analysis** — deep RCA from Playwright traces (network errors, console exceptions, slow actions)
