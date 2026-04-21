@@ -109,6 +109,21 @@ All 5 services redeploy automatically on every push to `main`.
 
 ---
 
+## Test suites
+
+Four test suites are pre-wired and run automatically on every PR via GitHub Actions:
+
+| Suite | Directory | Framework |
+|---|---|---|
+| Playwright | `e2e/` | TypeScript + Playwright |
+| Selenium Java | `e2e-selenium-java/` | Java + JUnit 5 + Maven |
+| Selenium Python | `e2e-selenium-python/` | Python + pytest + Selenium |
+| WebdriverIO | `e2e-wdio/` | TypeScript + WebdriverIO + Mocha |
+
+Each suite covers the same user flows: product catalog, cart, and checkout.
+
+---
+
 ## User Flow
 
 1. Browse products on the home page
