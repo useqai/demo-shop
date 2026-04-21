@@ -46,6 +46,10 @@ export const config: Options.Testrunner = {
             outputFileFormat(options: { cid: string }) {
                 return `results-${options.cid}.xml`
             },
+            classNameFormat({ packageName }: { packageName: string }) {
+                // Use spec file path as classname so QAI can fetch source for code fixes
+                return packageName
+            },
         }],
     ],
 
