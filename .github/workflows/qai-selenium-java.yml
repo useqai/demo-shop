@@ -41,6 +41,7 @@ jobs:
         uses: useqai/qai-agent@v1
         if: always()
         with:
+          suite-name: 'Selenium Java'
           junit-path: 'e2e-selenium-java/target/surefire-reports/*.xml'
           fail-on-high-risk: 'false'
           qai-url: https://ingest.useqai.dev

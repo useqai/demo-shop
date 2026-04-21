@@ -45,6 +45,7 @@ jobs:
         uses: useqai/qai-agent@v1
         if: always()
         with:
+          suite-name: 'WebdriverIO'
           junit-path: 'e2e-wdio/test-results/*.xml'
           fail-on-high-risk: 'false'
           qai-url: https://ingest.useqai.dev

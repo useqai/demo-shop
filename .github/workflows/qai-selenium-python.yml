@@ -47,6 +47,7 @@ jobs:
         uses: useqai/qai-agent@v1
         if: always()
         with:
+          suite-name: 'Selenium Python'
           junit-path: 'e2e-selenium-python/test-results/results.xml'
           fail-on-high-risk: 'false'
           qai-url: https://ingest.useqai.dev
