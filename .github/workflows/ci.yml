@@ -139,6 +139,7 @@ jobs:
         run: |
           java -jar ./sealights/sl-test-listener.jar uploadReports \
             -tokenfile sltoken.txt \
+            -buildsessionidfile buildSessionId.txt \
             -reportFile "./test-results/results.xml" \
             -source "Junit xml report"
           
