@@ -79,6 +79,8 @@ jobs:
     name: sealights for Java
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
     
       - name: Download SeaLights Agent
         run: |
@@ -129,9 +131,6 @@ jobs:
             -tokenfile sltoken.txt \
             -buildsessionidfile buildSessionId.txt \
             -testStage "Playwright"
-
-      - name: Checkout
-        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
