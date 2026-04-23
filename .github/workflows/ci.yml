@@ -105,7 +105,7 @@ jobs:
           java -jar ./sealights/sl-build-scanner.jar start \
             -tokenfile sltoken.txt \
             -buildsessionidfile buildSessionId.txt \
-            -testStage "Playwright Regression"
+            -testStage "Playwright"
 
       - name: Checkout
         uses: actions/checkout@v4
