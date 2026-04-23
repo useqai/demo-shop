@@ -134,6 +134,13 @@ jobs:
           curl -s -o sealights-java-latest.zip https://agents.sealights.co/sealights-java/sealights-java-latest.zip
           unzip -oq sealights-java-latest.zip -d ./sealights
           rm sealights-java-latest.zip
+
+      - name: "SeaLights: Upload report files"
+        run: |
+          java -jar ./sealights/sl-test-listener.jar uploadReports \
+            -tokenfile sltoken.txt \
+            -reportFile "./test-results/results.xml" \
+            -source "Junit xml report"
           
       - name: "SeaLights: End Test Listener"
         run: |
