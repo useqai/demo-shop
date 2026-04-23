@@ -93,6 +93,13 @@ jobs:
             -workspacepath "./checkout-svc/target" \
             -fi "*.class" \
             -r
+            
+      - name: "SeaLights: Finish Reporting"
+        run: |
+         java -jar ./sealights/sl-build-scanner.jar -buildend ok \
+              -tokenfile sltoken.txt \
+              -buildsessionidfile buildSessionId.txt
+      
 # ── SEALIGHTS END ─────────────────────────────────────
 
       - name: Test
