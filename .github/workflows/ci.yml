@@ -128,13 +128,6 @@ jobs:
         working-directory: e2e
         env:
           CI: true
-
-      - name: Upload JUnit results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: junit-results
-          path: ./test-results/results.xml
           
       - name: Download SeaLights Agent
         run: |
