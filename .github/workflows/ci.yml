@@ -102,7 +102,7 @@ jobs:
 
       - name: "SeaLights: Start Test Listener"
         run: |
-          java -jar ./sealights/sl-build-scanner.jar start \
+          java -jar ./sealights/sl-test-listener.jar start \
             -tokenfile sltoken.txt \
             -buildsessionidfile buildSessionId.txt \
             -testStage "Playwright"
@@ -134,7 +134,7 @@ jobs:
 
       - name: "SeaLights: End Test Listener"
         run: |
-          java -jar ./sealights/sl-build-scanner.jar end \
+          java -jar ./sealights/sl-test-listener.jar end \
             -tokenfile sltoken.txt \
             -buildsessionidfile buildSessionId.txt
       
