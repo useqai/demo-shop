@@ -55,34 +55,8 @@ jobs:
       - name: Build
         run: mvn -q package -DskipTests
         working-directory: checkout-svc
-        
-      - name: Test
-        run: mvn test
-        working-directory: checkout-svc
-        continue-on-error: true
-
-  # ── Docker build check for checkout-svc ──────────────────────────────────────
-  checkout-docker:
-    name: checkout-svc Docker build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
-      - name: Build Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: checkout-svc
-          push: false
 
 # ── SEALIGHTS START ─────────────────────────────────────
-  sealights:
-    name: sealights for Java
-    runs-on: ubuntu-latest
-    needs: checkout-svc
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-    
       - name: Download SeaLights Agent
         run: |
           curl -s -o sealights-java-latest.zip https://agents.sealights.co/sealights-java/sealights-java-latest.zip
@@ -155,6 +129,12 @@ jobs:
         env:
           CI: true
 
+      - name: Download SeaLights Agent
+        run: |
+          curl -s -o sealights-java-latest.zip https://agents.sealights.co/sealights-java/sealights-java-latest.zip
+          unzip -oq sealights-java-latest.zip -d ./sealights
+          rm sealights-java-latest.zip
+          
       - name: "SeaLights: End Test Listener"
         run: |
           java -jar ./sealights/sl-test-listener.jar end \
@@ -162,3 +142,21 @@ jobs:
             -buildsessionidfile buildSessionId.txt
       
 # ── SEALIGHTS END ─────────────────────────────────────
+
+      - name: Test
+        run: mvn test
+        working-directory: checkout-svc
+        continue-on-error: true
+
+  # ── Docker build check for checkout-svc ──────────────────────────────────────
+  checkout-docker:
+    name: checkout-svc Docker build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: checkout-svc
+          push: false
