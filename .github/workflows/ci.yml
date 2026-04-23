@@ -99,6 +99,44 @@ jobs:
          java -jar ./sealights/sl-build-scanner.jar -buildend -ok \
               -tokenfile sltoken.txt \
               -buildsessionidfile buildSessionId.txt
+
+      - name: "SeaLights: Start Test Listener"
+        run: |
+          java -jar ./sealights/sl-build-scanner.jar start \
+            -tokenfile sltoken.txt \
+            -buildsessionidfile buildSessionId.txt \
+            -testStage "Playwright Regression"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: e2e/package-lock.json
+
+      - name: Install Playwright dependencies
+        run: npm ci
+        working-directory: e2e
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+        working-directory: e2e
+
+      - name: Run Playwright tests
+        run: npx playwright test
+        continue-on-error: true
+        working-directory: e2e
+        env:
+          CI: true
+
+      - name: "SeaLights: End Test Listener"
+        run: |
+          java -jar ./sealights/sl-build-scanner.jar end \
+            -tokenfile sltoken.txt \
+            -buildsessionidfile buildSessionId.txt
       
 # ── SEALIGHTS END ─────────────────────────────────────
 
