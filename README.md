@@ -5,14 +5,18 @@ A sample e-commerce app for trying out [QAI Platform](https://useqai.dev) — AI
 ## Try QAI in 3 steps
 
 1. **Fork this repo** — click Fork above
+
 2. **Add your API key** — in your fork: Settings → Secrets and variables → Actions → New secret
    - Name: `QAI_API_KEY`
    - Value: your key from [useqai.dev/settings/api-keys](https://useqai.dev/settings/api-keys)
+
 3. **Open a pull request** — create a branch, make any small change, open a PR
+
+   > ⚠️ **Important:** When creating your PR, GitHub will default to opening it against `useqai/demo-shop`. Change the **base repository** dropdown to `your-username/demo-shop` so the PR stays in your fork and QAI fires correctly.
 
 That's it. The CI will run Playwright E2E tests and QAI will analyze the results — AI root cause analysis, failure clusters, and fix suggestions will appear in your dashboard and PR comment.
 
-## What you'll see
+## What you'll see on your dashboard at [useqai.dev](https://useqai.dev)
 
 - **AI Root Cause Analysis** — why each test failed and how to fix it
 - **Trace Analysis** — deep RCA from Playwright traces (network errors, console exceptions, slow actions)
