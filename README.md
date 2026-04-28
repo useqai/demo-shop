@@ -2,8 +2,6 @@
 
 A sample e-commerce app for trying out [QAI Platform](https://useqai.dev) — AI-powered test intelligence for your CI pipeline.
 
-**Want instant results?** Paste any JUnit XML at [useqai.dev/try](https://useqai.dev/try) — see risk score, failure clusters, and a PR comment preview in seconds. No sign-up needed.
-
 ## Try QAI in 3 steps
 
 1. **Fork this repo** — click Fork above
@@ -17,6 +15,8 @@ A sample e-commerce app for trying out [QAI Platform](https://useqai.dev) — AI
    > ⚠️ **Important:** When creating your PR, GitHub will default to opening it against `useqai/demo-shop`. Change the **base repository** dropdown to `your-username/demo-shop` so the PR stays in your fork and QAI fires correctly.
 
 That's it. The CI will run Playwright E2E tests and QAI will analyze the results — AI root cause analysis, failure clusters, and fix suggestions will appear in your dashboard and PR comment.
+
+**Want instant results?** Paste any JUnit XML at [useqai.dev/try](https://useqai.dev/try) — see risk score, failure clusters, and a PR comment preview in seconds. No sign-up needed.
 
 ## What you'll see on your dashboard at [useqai.dev](https://useqai.dev)
 
