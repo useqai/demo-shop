@@ -2,6 +2,8 @@
 
 A sample e-commerce app for trying out [QAI Platform](https://useqai.dev) — AI-powered test intelligence for your CI pipeline.
 
+**Want instant results?** Paste any JUnit XML at [useqai.dev/try](https://useqai.dev/try) — see risk score, failure clusters, and a PR comment preview in seconds. No sign-up needed.
+
 ## Try QAI in 3 steps
 
 1. **Fork this repo** — click Fork above
